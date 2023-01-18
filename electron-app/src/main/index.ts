@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import * as path from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 
@@ -14,6 +14,7 @@ function createWindow(): void {
       sandbox: false
     }
   })
+
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -32,7 +33,26 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
+  //窗口工具栏的配置项
+  ipcMain.on('minimize', function () {
+    mainWindow.minimize()
+  })
+  ipcMain.on('restore', function (event) {
+    let restule = mainWindow.isMaximized();
+    event.sender.send('onIsMax', restule)
+    if (restule) {
+      mainWindow.unmaximize()
+    } else {
+      mainWindow.maximize()
+    }
 
+
+  })
+  ipcMain.on('close', function () {
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  })
 }
 
 

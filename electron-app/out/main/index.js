@@ -41,6 +41,23 @@ function createWindow() {
   } else {
     mainWindow.loadFile(path__namespace.join(__dirname, "../renderer/index.html"));
   }
+  electron.ipcMain.on("minimize", function() {
+    mainWindow.minimize();
+  });
+  electron.ipcMain.on("restore", function(event) {
+    let restule = mainWindow.isMaximized();
+    event.sender.send("onIsMax", restule);
+    if (restule) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+  electron.ipcMain.on("close", function() {
+    if (process.platform !== "darwin") {
+      electron.app.quit();
+    }
+  });
 }
 electron.app.whenReady().then(() => {
   electron.app.on("browser-window-created", (_, window) => {
