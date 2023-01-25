@@ -2,7 +2,9 @@
   <q-header>
     <q-toolbar class="q-electron-drag">
       <q-toolbar-title class="q-electron-drag--exception">第6放映厅</q-toolbar-title>
+
       <q-space class="q-electron-drag" />
+
       <q-btn dense flat @click="minimize"
         ><img src="../assets/imgs/minimizing.svg" width="20"
       /></q-btn>
